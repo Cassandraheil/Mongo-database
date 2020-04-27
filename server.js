@@ -1,8 +1,7 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-var handlebars = require("handlebars")
-// var path = require("path");
+
 
 var axios = require("axios");
 var cheerio = require("cheerio");
@@ -24,8 +23,8 @@ app.get("/scrape", function(req, res){
     axios.get("https://www.buzzfeed.com/")
     .then(function(response){
         var $ = cheerio.load(response.data);
-
-        $("atricle.h2").each(function(i, element){
+        
+        $("article h2").each(function(i, element){
             var result ={};
 
             //finding the title and link
@@ -35,13 +34,9 @@ app.get("/scrape", function(req, res){
             result.link = $(element)
                 .children("a")
                 .attr("href");
-            result.summary = $(element)
-            .sibling("p")
-            .text();
-            // result.pic = $(this)
-            //     .children("picture")
-            //     .source("data-srcset");
-            // .find("a").find("img").attr("data-srcset").split(",")[0].split(" ")[0];
+            // result.summary = $(element)
+            //     .siblings("p")
+            //     .text();
             
             db.Article.create(result)
             .then(function(dbArticle){
@@ -51,8 +46,8 @@ app.get("/scrape", function(req, res){
             });
         });
         //making the new article to send to page
-    res.send("Scrape successful")
     });
+    res.send("Scrape successful")
 });
 
 
@@ -90,7 +85,6 @@ app.post("/articles/:id", function(req, res){
             new: true
         });
     }).then(function(dbArticle){
-        console.log("db article", dbArticle)
         res.json(dbArticle);
     }).catch(function(err){
         res.json(err);
@@ -98,17 +92,23 @@ app.post("/articles/:id", function(req, res){
 });
 
 app.get("/saved", function(req, res){
-    res.sendfile(path)
+    db.Article.find().sort({saved: true})
+    .then(function(dbArticle){
+        //sending them to 'database'
+        res.json(dbArticle);
+    }).catch(function(err){
+        res.json(err);
+    });
 });
 
-app.post("/save/:id", function(req, res){
-    console.log("request", req)
+app.post("/saved/:id", function(req, res){
+    console.log("request", req.body)
 
     db.Article.create(req.body)
     .then(function(dbArticle) {
 
-      return db.Article.findOneAndUpdate( 
-          {$push: {note: dbArticle._id}}, { saved: true });
+      return db.Article.dbArticle._id.findOneAndUpdate( 
+          {}, {$push: { saved: true }}, {new:true});
     })
     .then(function(dbArticle) {
       res.json(dbArticle);

@@ -11,11 +11,11 @@ $(document).on("click", "#scrape", function () {
                 for (var i = 0; i < data.length; i++) {
 
                     var title = $("<h6 data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</h6>");
-                    var summary = $("<p> " + data[i].summary + "</p>")
+                    var summary = $("<p>" + data[i].summary+ "</p>")
                     var saveBtn = $("<button id='save' data-id='" + data[i]._id + "' class='btn btn-success' type='button'>Save Article</button> ");
                     var noteBtn = $("<button data-id='" + data[i]._id + "' class='note btn btn-primary' type='button'>Add/See Comment</button>" + "<br />");
 
-                    $(".div").prepend(title, saveBtn, noteBtn, summary);
+                    $(".div").prepend(title, summary, saveBtn, noteBtn);
 
                 }
             });
@@ -90,7 +90,7 @@ $(document).on("click", "#save", function () {
 
     $.ajax({
         method: "POST",
-        url: "/save/" + thisId,
+        url: "/saved/" + thisId,
         data: {
             saved: true
         }
