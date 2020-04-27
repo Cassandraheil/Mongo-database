@@ -37,7 +37,7 @@ $(document).on("click", ".note", function () {
         .then(function (data) {
             console.log("this is data.note", data.note);
 
-            var articalTitle = $("<h4>" + data.title + "</h4>");
+            var articalTitle = $("<h5>" + data.title + "</h5>");
             var nameInput = $("<input id='nameInput' name='title' placeholder='username'>");
             var commentInput = $("<div class='form-group'><label for='exampleFormControlTextarea1' ></label><textarea class='form-control' placeholder='Your Comment'  id='bodyinput' rows='3'></textarea></div>");
             var save = $("<button data-id='" + data._id + "' id='savenote'>Save</button>");
