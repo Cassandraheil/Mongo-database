@@ -104,16 +104,14 @@ app.get("/saved", function(req, res){
 app.post("/saved/:id", function(req, res){
     console.log("request", req.body)
 
-    db.Article.create(req.body)
-    .then(function(dbArticle) {
+      db.Article.findOneAndUpdate( 
+       {_id: req.params.id}, { saved: true }, {new:true})
 
-      return db.Article.dbArticle._id.findOneAndUpdate( 
-        {$push: { saved: true }}, {new:true});
-    })
     .then(function(dbArticle) {
       res.json(dbArticle);
     })
     .catch(function(err) {
+        console.log("error here", err)
       res.json(err);
     });
 });

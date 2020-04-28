@@ -92,9 +92,6 @@ $(document).on("click", "#save", function () {
     $.ajax({
         method: "POST",
         url: "/saved/" + thisId,
-        data: {
-            saved: true
-        }
     })
         .then(function (data) {
             console.log("save btn data", data);
