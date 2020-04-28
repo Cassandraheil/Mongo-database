@@ -15,7 +15,7 @@ app.use(express.urlencoded({extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+var MONGODB_URI = process.env.MONGODB_URI || "https://evening-lake-25520.herokuapp.com/";
 
 mongoose.connect(MONGODB_URI);
 
