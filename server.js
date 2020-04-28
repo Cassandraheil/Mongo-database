@@ -15,7 +15,7 @@ app.use(express.urlencoded({extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-var MONGODB_URI = process.env.MONGODB_URI || "https://evening-lake-25520.herokuapp.com/";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
 mongoose.connect(MONGODB_URI);
 
@@ -34,9 +34,9 @@ app.get("/scrape", function(req, res){
             result.link = $(element)
                 .children("a")
                 .attr("href");
-            // result.summary = $(element)
-            //     .siblings("p")
-            //     .text();
+            result.summary = $(element)
+                .siblings("p")
+                .text();
             
             db.Article.create(result)
             .then(function(dbArticle){
@@ -92,7 +92,7 @@ app.post("/articles/:id", function(req, res){
 });
 
 app.get("/saved", function(req, res){
-    db.Article.find().sort({saved: true})
+    db.Article.find({saved: true})
     .then(function(dbArticle){
         //sending them to 'database'
         res.json(dbArticle);
@@ -108,7 +108,7 @@ app.post("/saved/:id", function(req, res){
     .then(function(dbArticle) {
 
       return db.Article.dbArticle._id.findOneAndUpdate( 
-          {}, {$push: { saved: true }}, {new:true});
+        {$push: { saved: true }}, {new:true});
     })
     .then(function(dbArticle) {
       res.json(dbArticle);

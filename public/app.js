@@ -10,12 +10,13 @@ $(document).on("click", "#scrape", function () {
                 console.log("this should be json data", data)
                 for (var i = 0; i < data.length; i++) {
 
-                    var title = $("<h6 data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</h6>");
+                    var title = $("<h6 data-id='" + data[i]._id + "'>" + data[i].title + "</h6>");
+                    var link = $("<a href='"+ data[i].link + "'<p> Click here to see article</p></a>");
                     var summary = $("<p>" + data[i].summary+ "</p>")
                     var saveBtn = $("<button id='save' data-id='" + data[i]._id + "' class='btn btn-success' type='button'>Save Article</button> ");
                     var noteBtn = $("<button data-id='" + data[i]._id + "' class='note btn btn-primary' type='button'>Add/See Comment</button>" + "<br />");
 
-                    $(".div").prepend(title, summary, saveBtn, noteBtn);
+                    $(".div").prepend(title, link, summary, saveBtn, noteBtn);
 
                 }
             });
@@ -68,7 +69,7 @@ $(document).on("click", "#savenote", function () {
     })
         .then(function (data) {
             console.log("post to save data", data);
-            alert("Your comment was added")
+            // alert("Your comment was added")
             document.getElementById("notes").style.display = "none";
         });
     $("#nameInput").val("");
@@ -97,6 +98,30 @@ $(document).on("click", "#save", function () {
     })
         .then(function (data) {
             console.log("save btn data", data);
+
+        });
+
+});
+
+//go to saved articles
+$(document).on("click", "#saved", function () {
+
+    console.log("got to saved was hit")
+
+    $.ajax({
+        method: "GET",
+        url: "/saved/",
+    })
+        .then(function (data) {
+            console.log("saved data", data);
+            for (var i = 0; i < data.length; i++) {
+
+                var title = $("<h6 data-id='" + data[i]._id + "'>" + data[i].title + "</h6>");
+                var link = $("<a href='"+ data[i].link + "'<p> Click here to see article</p></a>");
+                var summary = $("<p>" + data[i].summary+ "</p>");
+
+                $(".div").prepend(title, link, summary);
+            }
 
         });
 
