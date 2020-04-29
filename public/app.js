@@ -1,5 +1,6 @@
 //clicking the scrape button
 $(document).on("click", "#scrape", function () {
+    $("#div").empty();
     $.ajax({
         method: "GET",
         url: "/scrape"
@@ -12,11 +13,11 @@ $(document).on("click", "#scrape", function () {
 
                     var title = $("<h6 data-id='" + data[i]._id + "'>" + data[i].title + "</h6>");
                     var link = $("<a href='"+ data[i].link + "'<p> Click here to see article</p></a>");
-                    var summary = $("<p>" + data[i].summary+ "</p>")
+                    var summary = $("<p>" + data[i].summary + "</p>")
                     var saveBtn = $("<button id='save' data-id='" + data[i]._id + "' class='btn btn-success' type='button'>Save Article</button> ");
                     var noteBtn = $("<button data-id='" + data[i]._id + "' class='note btn btn-primary' type='button'>Add/See Comment</button>" + "<br />");
 
-                    $(".div").prepend(title, link, summary, saveBtn, noteBtn);
+                    $("#div").prepend(title, link, summary, saveBtn, noteBtn);
 
                 }
             });
@@ -43,14 +44,23 @@ $(document).on("click", ".note", function () {
             var commentInput = $("<div class='form-group'><label for='exampleFormControlTextarea1' ></label><textarea class='form-control' placeholder='Your Comment'  id='bodyinput' rows='3'></textarea></div>");
             var save = $("<button data-id='" + data._id + "' id='savenote'>Save</button>");
             var cancel = $("<button data-id='" + data._id + "' id='cancel'>Cancel</button>");
+            
+            
+            // var otherComments = [""];
+            // for (var i=0; i< 20; i++){
+                $("notes").append(data.note)
+            // }
 
 // id='exampleFormControlTextarea1'
 
             $("#notes").append(articalTitle, nameInput, commentInput, save, cancel)
 
-            if (data.note.title) {
-                var name = $("<h6 class='name'></h6>")
-                $(".name").val(data.note.title);
+            if (data.note) {
+                var title = $("<p> User:    "+ data.note.title +"<p>")
+                var body = $("<p> Comment:   "+ data.note.body +"<p>")
+                $("#notes").append(title, body)
+                // var name = $("<h6 class='name'></h6>")
+                // $(".name").val(data.note.title);
                 // $(".name").val(data.note.body);
             }
         });
@@ -95,6 +105,7 @@ $(document).on("click", "#save", function () {
     })
         .then(function (data) {
             console.log("save btn data", data);
+            alert("Article Saved")
 
         });
 
@@ -102,22 +113,22 @@ $(document).on("click", "#save", function () {
 
 //go to saved articles
 $(document).on("click", "#saved", function () {
-
-    console.log("got to saved was hit")
-
+    $("#div").empty();
+    
     $.ajax({
         method: "GET",
         url: "/saved/",
     })
-        .then(function (data) {
+    .then(function (data) {
             console.log("saved data", data);
             for (var i = 0; i < data.length; i++) {
 
-                var title = $("<h6 data-id='" + data[i]._id + "'>" + data[i].title + "</h6>");
-                var link = $("<a href='"+ data[i].link + "'<p> Click here to see article</p></a>");
+                var title = $("<h4 data-id='" + data[i]._id + "'>" + data[i].title + "</h4>");
+                var link = $("<a href='"+ data[i].link + "'<p> Open Article</p></a>");
                 var summary = $("<p>" + data[i].summary+ "</p>");
+                var noteBtn = $("<button data-id='" + data[i]._id + "' class='note btn btn-primary' type='button'>Add/See Comment</button>" + "<br />");
 
-                $(".div").prepend(title, link, summary);
+                $("#div").prepend(title, link, summary, noteBtn);
             }
 
         });

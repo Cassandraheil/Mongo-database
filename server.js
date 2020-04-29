@@ -116,6 +116,21 @@ app.post("/saved/:id", function(req, res){
     });
 });
 
+app.post("/unsave/:id", function(req, res){
+    console.log("request", req.body)
+
+      db.Article.findOneAndUpdate( 
+       {_id: req.params.id}, { saved: false }, {new:true})
+
+    .then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+        console.log("error here", err)
+      res.json(err);
+    });
+});
+
 app.get("/delete/:id", function(req, res){
     db.Article.remove(
         {
